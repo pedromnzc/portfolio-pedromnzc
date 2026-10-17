@@ -1,0 +1,320 @@
+/* =========================================================
+   Pedro Muniz Cherulli — currículo
+   Paleta inspirada nos azulejos de Athos Bulcão (Brasília)
+   ========================================================= */
+
+:root{
+  color-scheme:light;
+  --fundo:#F3F5F9;         /* página */
+  --azulejo:#FFFFFF;       /* esmalte branco das peças */
+  --rejunte:#D5DCE8;       /* linhas entre as peças */
+  --motivo:#2346A8;        /* desenho dos azulejos */
+  --cor-icone:#2346A8;     /* ícones das ferramentas */
+  --cobalto:#2346A8;       /* links e botões */
+  --sobre-cobalto:#FFFFFF;
+  --tinta:#14204A;         /* texto */
+  --apagado:#4C5878;       /* texto secundário */
+  --ipe:#F2B705;           /* amarelo dos ipês, usado pouco */
+  --placa:#FFFFFF;
+  --foco:#2346A8;
+
+  --display:"Jost", "Futura", "Century Gothic", system-ui, sans-serif;
+  --texto:"Source Serif 4", Georgia, "Times New Roman", serif;
+
+  --largura:1160px;
+  --margem:24px;
+  --topo:64px;
+  --junta:3px;
+}
+/* Tema escuro: segue o sistema, a não ser que o visitante escolha o claro nos azulejos do topo… */
+@media (prefers-color-scheme: dark){
+  :root:not([data-tema="claro"]){
+    color-scheme:dark;
+    --fundo:#0E1838; --azulejo:#16234F; --rejunte:#0A1230;
+    --motivo:#4F72E3; --cor-icone:#A9BEFF; --cobalto:#9DB4FF; --sobre-cobalto:#0E1838;
+    --tinta:#E8EDF8; --apagado:#A9B4D0; --ipe:#F5C542; --placa:#16234F; --foco:#F5C542;
+  }
+}
+/* …ou quando ele escolhe o escuro */
+:root[data-tema="escuro"]{
+  color-scheme:dark;
+  --fundo:#0E1838; --azulejo:#16234F; --rejunte:#0A1230;
+  --motivo:#4F72E3; --cor-icone:#A9BEFF; --cobalto:#9DB4FF; --sobre-cobalto:#0E1838;
+  --tinta:#E8EDF8; --apagado:#A9B4D0; --ipe:#F5C542; --placa:#16234F; --foco:#F5C542;
+}
+
+/* Base */
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topo) + 16px);-webkit-text-size-adjust:100%}
+body{
+  background:var(--fundo);color:var(--tinta);
+  font-family:var(--texto);font-size:1.125rem;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:var(--cobalto);text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px}
+::selection{background:var(--ipe);color:#14204A}
+:focus-visible{outline:3px solid var(--foco);outline-offset:3px}
+.wrap{width:min(100% - 2*var(--margem), var(--largura));margin-inline:auto}
+.motivos{position:absolute;width:0;height:0;overflow:hidden}
+.pular{
+  position:absolute;left:var(--margem);top:-80px;z-index:20;
+  background:var(--cobalto);color:var(--sobre-cobalto);padding:10px 16px;font-family:var(--display)
+}
+.pular:focus{top:12px}
+
+/* Topo */
+.topo{position:sticky;top:0;z-index:10;background:var(--fundo);border-bottom:1px solid transparent;transition:border-color .2s}
+.rolou .topo{border-bottom-color:var(--rejunte)}
+.topo__in{display:flex;align-items:center;gap:28px;height:var(--topo)}
+.marca{font-family:var(--display);font-weight:600;font-size:1.125rem;letter-spacing:-.01em;color:var(--tinta);text-decoration:none}
+.topo nav{display:flex;gap:28px;margin-left:auto;min-width:0}
+.topo nav a{
+  position:relative;padding:6px 0;white-space:nowrap;
+  font-family:var(--display);font-weight:500;font-size:.9375rem;color:var(--apagado);text-decoration:none
+}
+.topo nav a::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--cobalto);
+  transform:scaleX(0);transform-origin:left;transition:transform .25s ease
+}
+.topo nav a:hover,.topo nav a[aria-current]{color:var(--tinta)}
+.topo nav a:hover::after,.topo nav a[aria-current]::after{transform:scaleX(1)}
+
+/* Troca de tema: dois azulejos com o motivo "ponto" (sol no claro, lua no escuro).
+   As cores são fixas, para cada um mostrar o tema que ativa. */
+.temas{display:flex;gap:10px;flex:none}
+.tema{
+  display:block;width:30px;height:30px;padding:0;border:0;border-radius:1px;cursor:pointer;
+  background:var(--tema-fundo);color:var(--tema-motivo);box-shadow:0 0 0 1px var(--rejunte);
+  transition:box-shadow .2s
+}
+.tema svg{width:100%;height:100%;fill:currentColor;transform:rotate(var(--giro,0deg));transition:transform .55s cubic-bezier(.34,1.45,.5,1)}
+.tema--claro{--tema-fundo:#FFFFFF;--tema-motivo:#2346A8;--ponto:#F2B705}
+.tema--escuro{--tema-fundo:#16234F;--tema-motivo:#4F72E3;--ponto:#E8EDF8}
+.tema[aria-pressed="true"]{box-shadow:0 0 0 2px var(--fundo),0 0 0 4px var(--cobalto)}
+
+/* Abertura: texto à esquerda, parede de azulejos até a borda direita */
+.hero{
+  display:grid;
+  grid-template-columns:minmax(var(--margem),1fr) minmax(0,calc(var(--largura)/2)) minmax(0,calc(var(--largura)/2)) minmax(var(--margem),1fr);
+  min-height:min(calc(100svh - var(--topo)), 900px);
+}
+.hero__texto{grid-column:2;align-self:center;padding:72px 56px 80px 0}
+.nome{
+  display:flex;flex-direction:column;
+  font-family:var(--display);font-weight:500;font-size:clamp(3.5rem, 9vw, 8.5rem);
+  line-height:.9;letter-spacing:-.04em
+}
+.papel{margin-top:28px;font-family:var(--display);font-weight:500;font-size:1.5rem;line-height:1.3}
+.intro{margin-top:16px;max-width:31em;font-size:1.3125rem;line-height:1.55}
+.contatos{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.botao{
+  display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 20px;
+  border:1.5px solid var(--cobalto);border-radius:4px;background:transparent;color:var(--cobalto);
+  font-family:var(--display);font-weight:500;font-size:1rem;text-decoration:none;
+  transition:background-color .2s,color .2s,border-color .2s
+}
+.botao:hover{background:var(--cobalto);color:var(--sobre-cobalto)}
+.botao--cheio{background:var(--cobalto);color:var(--sobre-cobalto)}
+.botao--cheio:hover{background:var(--tinta);border-color:var(--tinta)}
+.botao__icone{width:18px;height:18px;flex:none;background:currentColor;-webkit-mask:var(--icone) center/contain no-repeat;mask:var(--icone) center/contain no-repeat}
+.local{display:flex;align-items:center;gap:8px;margin-top:28px;font-family:var(--display);font-size:.9375rem;color:var(--apagado)}
+.local svg{width:16px;height:16px;fill:currentColor}
+
+.hero__parede{grid-column:3 / 5;position:relative;margin:0;min-height:440px}
+.parede{
+  position:absolute;inset:0;overflow:hidden;cursor:pointer;
+  display:grid;align-content:start;
+  grid-template-columns:repeat(var(--colunas,6), var(--lado,96px));grid-auto-rows:var(--lado,96px);
+  gap:var(--junta);padding:var(--junta) 0 0 var(--junta);background:var(--rejunte)
+}
+
+/* Azulejo: a peça gira pela variável --giro */
+.azulejo{
+  display:block;background:var(--azulejo);color:var(--motivo);border-radius:1px;
+  transform:rotate(var(--giro,0deg));transition:transform .55s cubic-bezier(.34,1.45,.5,1)
+}
+.azulejo svg{width:100%;height:100%;fill:currentColor}
+.azulejo--ipe{--ponto:var(--ipe)}
+
+.placa{
+  position:absolute;left:24px;bottom:24px;z-index:1;max-width:290px;padding:16px 18px;
+  background:var(--placa);color:var(--tinta);border-radius:2px;
+  box-shadow:0 0 0 1px var(--rejunte),0 14px 32px -16px rgb(10 18 48 / .45);
+  font-family:var(--display);font-size:.9375rem;line-height:1.45
+}
+.placa__botao{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 12px;
+  background:transparent;border:1.5px solid var(--cobalto);border-radius:4px;cursor:pointer;
+  font:inherit;font-weight:500;color:var(--cobalto);transition:background-color .2s,color .2s
+}
+.placa__botao:hover{background:var(--cobalto);color:var(--sobre-cobalto)}
+.placa__botao svg{width:16px;height:16px;fill:currentColor;transition:transform .5s ease}
+.placa__botao:active svg{transform:rotate(180deg)}
+
+/* Seções: título numa coluna lateral fixa, conteúdo ao lado */
+.secao{padding-top:120px}
+.secao:last-child{padding-bottom:120px}
+.secao__grade{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px}
+.secao__cabeca{position:sticky;top:calc(var(--topo) + 32px);align-self:start}
+.secao__cabeca h2{font-family:var(--display);font-weight:500;font-size:2.25rem;line-height:1.1;letter-spacing:-.02em}
+.secao__cabeca p{margin-top:16px;font-size:1rem;line-height:1.55;color:var(--apagado)}
+h3{font-family:var(--display);font-weight:500}
+
+/* Linha do tempo (experiência e formação) */
+.linha{list-style:none;padding:0;border-left:2px solid var(--rejunte)}
+.marco{position:relative;display:grid;grid-template-columns:140px minmax(0,1fr);gap:24px;padding:0 0 48px 40px}
+.marco:last-child{padding-bottom:4px}
+.marco::before{
+  content:"";position:absolute;left:-10px;top:4px;width:18px;height:18px;
+  background:radial-gradient(circle at 0 0, var(--motivo) 17.5px, var(--azulejo) 18px);
+  box-shadow:0 0 0 2px var(--rejunte)
+}
+.marco__quando{padding-top:2px;font-family:var(--display);font-weight:500;font-size:1rem;color:var(--cobalto)}
+.marco h3{font-size:1.3125rem;line-height:1.3}
+.marco__onde{margin-top:2px;font-size:1rem;color:var(--apagado)}
+.marco__texto{margin-top:12px;max-width:60ch}
+
+/* Projetos */
+.projetos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px 40px}
+.projeto{display:grid;gap:24px;align-content:start}
+/* O destaque, e um projeto que ficaria sozinho na linha, ocupam a largura toda com a capa ao lado */
+.projeto--destaque,
+.projeto--destaque + .projeto:last-child,
+.projeto:only-child{grid-column:1 / -1;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:40px;align-items:center}
+.capa{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:var(--junta);padding:var(--junta);
+  background:var(--rejunte);border-radius:2px;overflow:hidden
+}
+.capa .azulejo{aspect-ratio:1;transition-delay:calc(var(--i,0) * 35ms)}
+.projeto:hover .capa .azulejo,
+.projeto:focus-within .capa .azulejo{transform:rotate(calc(var(--giro,0deg) + 90deg))}
+.capa--imagem{display:block;padding:0}
+.capa--imagem img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.projeto h3{font-size:1.5rem;line-height:1.2;letter-spacing:-.01em}
+.projeto--destaque h3{font-size:2rem}
+.projeto h3 a{color:var(--tinta);text-decoration:none}
+.projeto h3 a:hover{color:var(--cobalto);text-decoration:underline;text-decoration-thickness:2px}
+.projeto__descricao{margin-top:12px;max-width:60ch}
+.etiquetas{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.etiquetas li{
+  padding:3px 10px;border-radius:2px;background:var(--azulejo);box-shadow:inset 0 0 0 1px var(--rejunte);
+  font-family:var(--display);font-weight:500;font-size:.875rem;color:var(--cobalto)
+}
+.projeto__acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.projeto__info{margin-top:14px;font-family:var(--display);font-size:.875rem;color:var(--apagado)}
+.projeto__info:empty{display:none}
+
+.todos{margin-top:40px;font-family:var(--display);font-weight:500}
+
+/* Ferramentas: cada uma é um azulejo com o ícone pintado em cobalto */
+.grupo + .grupo{margin-top:44px}
+.grupo h3{margin-bottom:14px;font-size:1rem;color:var(--apagado)}
+.ferramentas{
+  list-style:none;padding:var(--junta);
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:var(--junta)
+}
+.ferramenta{
+  aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:12px;
+  background:var(--azulejo);box-shadow:0 0 0 var(--junta) var(--rejunte);border-radius:1px;
+  font-family:var(--display);font-weight:500;font-size:.9375rem;line-height:1.2;text-align:center
+}
+.ferramenta__icone{
+  width:44px;height:44px;background:var(--cor-icone);
+  -webkit-mask:var(--icone) center/contain no-repeat;mask:var(--icone) center/contain no-repeat
+}
+.sem-icone .ferramenta__icone,.sem-icone .botao__icone{display:none}
+.a-assentar > *{opacity:0}
+
+/* Ícones: os do Simple Icons são ligados pelo main.js; estes não existem lá e foram desenhados aqui */
+[data-icone="powerbi"]{--icone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='12' width='5' height='10' rx='1.2'/%3E%3Crect x='9.5' y='7' width='5' height='15' rx='1.2'/%3E%3Crect x='16' y='2' width='5' height='20' rx='1.2'/%3E%3C/svg%3E")}
+[data-icone="windows"]{--icone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 2h9.5v9.5H2zM12.5 2H22v9.5h-9.5zM2 12.5h9.5V22H2zM12.5 12.5H22V22h-9.5z'/%3E%3C/svg%3E")}
+[data-icone="office"]{--icone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm0 5v4h6V8Zm8 0v4h6V8Zm-8 6v5h6v-5Zm8 0v5h6v-5Z'/%3E%3C/svg%3E")}
+[data-icone="linkedin"]{--icone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.2 1.5-2.2 2.9V21H9z'/%3E%3C/svg%3E")}
+[data-icone="email"]{--icone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 5h20v14H2zm2 2v.5l8 5 8-5V7zm16 2.8-8 5-8-5V17h16z'/%3E%3C/svg%3E")}
+
+/* Idiomas: o nível aparece também como azulejos preenchidos */
+.idiomas__titulo{margin-top:72px;font-size:1.3125rem}
+.idiomas{margin-top:12px;border-top:1px solid var(--rejunte)}
+.idioma{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--rejunte)}
+.idioma dt{font-family:var(--display);font-weight:500;font-size:1.125rem}
+/* Azulejos encostados à direita, para os níveis ficarem alinhados entre as linhas */
+.idioma dd{display:flex;flex-direction:row-reverse;align-items:center;gap:16px;font-family:var(--display);font-size:1rem;color:var(--apagado)}
+.nivel{display:flex;gap:var(--junta)}
+.nivel i{width:16px;height:16px;background:var(--azulejo);box-shadow:inset 0 0 0 1px var(--rejunte)}
+.nivel i.cheio{background:radial-gradient(circle at 0 0, var(--motivo) 15.5px, var(--azulejo) 16px)}
+
+/* Rodapé: uma fileira de azulejos, como o rodapé de uma parede */
+.rodape{padding-bottom:96px}
+.rodape__azulejos{
+  display:grid;grid-auto-flow:column;grid-auto-columns:56px;grid-template-rows:56px;gap:var(--junta);
+  padding-block:var(--junta);background:var(--rejunte);overflow:hidden;margin-bottom:96px
+}
+.rodape__chamada{font-size:1.3125rem;line-height:1.5}
+.rodape__chamada a{display:inline-block;font-family:var(--display);font-weight:500;font-size:1.5rem;word-break:break-word}
+.rodape .contatos{margin-top:28px}
+.credito{margin-top:40px;max-width:60ch;font-size:1rem;color:var(--apagado)}
+
+/* Telas médias */
+@media (max-width:900px){
+  .hero{grid-template-columns:var(--margem) minmax(0,1fr) var(--margem);min-height:0}
+  .hero__texto{grid-column:2;padding:48px 0 44px}
+  .hero__parede{grid-column:1 / -1;min-height:0;display:grid}
+  .parede{position:relative;height:clamp(220px, 46vw, 340px)}
+  .placa{position:static;max-width:none;margin:0 var(--margem);box-shadow:none;padding:16px 0 0;background:none}
+  .secao{padding-top:88px}
+  .secao__grade{grid-template-columns:minmax(0,1fr);gap:28px}
+  .secao__cabeca{position:static}
+  .projeto--destaque,
+  .projeto--destaque + .projeto:last-child,
+  .projeto:only-child{grid-template-columns:minmax(0,1fr);gap:24px}
+}
+
+/* Sem espaço para o nome e o menu juntos no topo */
+@media (max-width:820px){
+  .marca{display:none}
+}
+
+/* Celular */
+@media (max-width:640px){
+  :root{--margem:16px;--topo:56px}
+  body{font-size:1.0625rem}
+  .topo__in{gap:16px}
+  .topo nav{flex:1 1 auto;gap:20px;overflow-x:auto;scrollbar-width:none;padding-block:4px}
+  .topo nav::-webkit-scrollbar{display:none}
+  .papel{font-size:1.25rem}
+  .intro{font-size:1.125rem}
+  .secao{padding-top:72px}
+  .secao:last-child{padding-bottom:88px}
+  .secao__cabeca h2{font-size:1.875rem}
+  .projetos{grid-template-columns:minmax(0,1fr)}
+  .projeto--destaque h3{font-size:1.625rem}
+  .marco{grid-template-columns:minmax(0,1fr);gap:4px;padding-left:28px}
+  .ferramentas{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ferramenta{gap:10px;font-size:.8125rem}
+  .ferramenta__icone{width:34px;height:34px}
+  .rodape__azulejos{margin-bottom:72px}
+  .rodape__chamada a{font-size:1.25rem}
+}
+
+/* Menos movimento para quem pede */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+
+/* Impressão: só o currículo */
+@media print{
+  .topo,.hero__parede,.rodape__azulejos,.capa,.pular,.todos{display:none !important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .hero{display:block;min-height:0}
+  .hero__texto{padding:0 0 16pt}
+  .nome{font-size:32pt}
+  .secao{padding-top:18pt}
+  .secao__grade{grid-template-columns:120pt 1fr;gap:16pt}
+  .secao__cabeca{position:static}
+  .ferramentas{grid-template-columns:repeat(6,1fr)}
+  a{color:inherit}
+}

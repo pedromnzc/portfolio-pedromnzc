@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pedro Muniz Cherulli — Ciência de Dados</title>
+  <meta name="description" content="Currículo e projetos de Pedro Muniz Cherulli, estudante de Ciência de Dados no UniCEUB e estagiário na ANTT.">
+  <meta name="theme-color" content="#F3F5F9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E1838" media="(prefers-color-scheme: dark)">
+
+  <!-- Prévia do link no LinkedIn e em outras redes -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://pedromnzc.github.io/portfolio-pedromnzc/">
+  <meta property="og:title" content="Pedro Muniz Cherulli — Ciência de Dados">
+  <meta property="og:description" content="Currículo e projetos de Pedro Muniz Cherulli, estudante de Ciência de Dados no UniCEUB e estagiário na ANTT.">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Aplica o tema escolhido na visita anterior antes de desenhar a página -->
+  <script>
+    try {
+      var tema = localStorage.getItem("tema");
+      if (tema === "claro" || tema === "escuro") document.documentElement.dataset.tema = tema;
+    } catch (e) {}
+  </script>
+
+  <script src="assets/js/projetos.js" defer></script>
+  <script src="assets/js/ferramentas.js" defer></script>
+  <script src="assets/js/idiomas.js" defer></script>
+  <script src="assets/js/experiencia.js" defer></script>
+  <script src="assets/js/formacao.js" defer></script>
+  <script src="assets/js/contatos.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <noscript><style>.hero__parede, .rodape__azulejos { display: none; }</style></noscript>
+</head>
+<body>
+
+<a class="pular" href="#experiencia">Pular para o conteúdo</a>
+
+<!-- Desenhos dos azulejos (cada peça usa um destes e é girada 0°, 90°, 180° ou 270°) -->
+<svg class="motivos" aria-hidden="true" focusable="false">
+  <symbol id="m-quarto" viewBox="0 0 100 100">
+    <path d="M0 0H100A100 100 0 0 1 0 100Z"/>
+  </symbol>
+  <symbol id="m-triangulo" viewBox="0 0 100 100">
+    <path d="M0 0H100L0 100Z"/>
+  </symbol>
+  <symbol id="m-arcos" viewBox="0 0 100 100">
+    <path d="M50 0A50 50 0 0 1 0 50M100 50A50 50 0 0 0 50 100" fill="none" stroke="currentColor" stroke-width="16"/>
+  </symbol>
+  <symbol id="m-meia" viewBox="0 0 100 100">
+    <path d="M22 0A28 28 0 0 0 78 0Z"/>
+    <rect y="86" width="100" height="14"/>
+  </symbol>
+  <symbol id="m-ponto" viewBox="0 0 100 100">
+    <circle cx="66" cy="34" r="12" style="fill: var(--ponto, currentColor)"/>
+    <path d="M0 100V70A30 30 0 0 1 30 100Z"/>
+  </symbol>
+</svg>
+
+<header class="topo">
+  <div class="wrap topo__in">
+    <a class="marca" href="#inicio">Pedro Muniz Cherulli</a>
+    <nav aria-label="Seções da página">
+      <a href="#experiencia">Experiência</a>
+      <a href="#projetos">Projetos</a>
+      <a href="#ferramentas">Ferramentas</a>
+      <a href="#formacao">Formação</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div class="temas" role="group" aria-label="Tema da página">
+      <button type="button" class="tema tema--claro" data-tema-botao="claro" data-giro="0" aria-pressed="false" aria-label="Tema claro" title="Tema claro">
+        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#m-ponto"></use></svg>
+      </button>
+      <button type="button" class="tema tema--escuro" data-tema-botao="escuro" data-giro="0" aria-pressed="false" aria-label="Tema escuro" title="Tema escuro">
+        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#m-ponto"></use></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="inicio" aria-labelledby="nome">
+    <div class="hero__texto">
+      <h1 class="nome" id="nome"><span>Pedro</span> <span>Muniz</span> <span>Cherulli</span></h1>
+      <p class="papel">Estudante de Ciência de Dados no UniCEUB</p>
+      <p class="intro">
+        Estou no 6º semestre e estagio na ANTT, onde trabalho com fornecimento de dados
+        e com modelos de IA locais para a Ouvidoria. Procuro oportunidades para aplicar
+        análise de dados e aprendizado de máquina a problemas reais.
+      </p>
+      <!-- Os botões de contato vêm de assets/js/contatos.js -->
+      <ul class="contatos" data-contatos-abertura></ul>
+      <p class="local">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+        Brasília, DF
+      </p>
+    </div>
+
+    <figure class="hero__parede">
+      <div class="parede" data-parede aria-hidden="true"></div>
+      <figcaption class="placa">
+        <p>Parede à maneira de Athos Bulcão. Clique em um azulejo para girá-lo.</p>
+        <button type="button" class="placa__botao" data-sortear>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
+          Sortear outra parede
+        </button>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="secao" id="experiencia" aria-labelledby="t-experiencia">
+    <div class="wrap secao__grade">
+      <div class="secao__cabeca">
+        <h2 id="t-experiencia">Experiência</h2>
+      </div>
+      <!-- As experiências vêm de assets/js/experiencia.js -->
+      <ol class="linha" data-experiencia></ol>
+    </div>
+  </section>
+
+  <section class="secao" id="projetos" aria-labelledby="t-projetos">
+    <div class="wrap secao__grade">
+      <div class="secao__cabeca">
+        <h2 id="t-projetos">Projetos</h2>
+        <p>Cada projeto fica no próprio repositório do GitHub, com um README que explica o que ele faz
+          e como executar.</p>
+      </div>
+      <div>
+        <!-- Os projetos vêm de assets/js/projetos.js -->
+        <div class="projetos" data-projetos></div>
+
+        <p class="todos">
+          <a href="https://github.com/pedromnzc?tab=repositories" target="_blank" rel="noopener">Ver todos os repositórios no GitHub</a>
+        </p>
+        <noscript>
+          <p>Ative o JavaScript para ver os cartões dos projetos, ou abra a lista diretamente no GitHub.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" id="ferramentas" aria-labelledby="t-ferramentas">
+    <div class="wrap secao__grade">
+      <div class="secao__cabeca">
+        <h2 id="t-ferramentas">Ferramentas</h2>
+      </div>
+      <!-- As ferramentas vêm de assets/js/ferramentas.js -->
+      <div data-ferramentas></div>
+    </div>
+  </section>
+
+  <section class="secao" id="formacao" aria-labelledby="t-formacao">
+    <div class="wrap secao__grade">
+      <div class="secao__cabeca">
+        <h2 id="t-formacao">Formação</h2>
+      </div>
+      <div>
+        <!-- Os cursos vêm de assets/js/formacao.js -->
+        <ol class="linha" data-formacao></ol>
+
+        <h3 class="idiomas__titulo">Idiomas</h3>
+        <!-- Os idiomas vêm de assets/js/idiomas.js -->
+        <dl class="idiomas" data-idiomas></dl>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="rodape" id="contato" aria-labelledby="t-contato">
+  <div class="rodape__azulejos" data-rodape aria-hidden="true"></div>
+  <div class="wrap secao__grade">
+    <div class="secao__cabeca">
+      <h2 id="t-contato">Contato</h2>
+    </div>
+    <div>
+      <!-- O e-mail e os botões vêm de assets/js/contatos.js -->
+      <p class="rodape__chamada" data-chamada-email></p>
+      <ul class="contatos" data-contatos-rodape></ul>
+      <p class="credito">
+        Brasília, DF. Feito com HTML, CSS e JavaScript e publicado no GitHub Pages.
+        Os azulejos homenageiam Athos Bulcão, que com peças simples compôs paredes inteiras
+        de Brasília. Dessa forma pretendo construir meu futuro: peça por peça,
+        um projeto de cada vez.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
