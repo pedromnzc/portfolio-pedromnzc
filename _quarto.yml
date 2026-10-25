@@ -1,0 +1,7 @@
+project:
+  type: default
+  output-dir: outputs/render
+  render:
+    - inputs/revisor/revisor.qmd
+
+lang: pt-BR
