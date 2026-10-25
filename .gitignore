@@ -1,2 +1,30 @@
+
+# --- RStudio & Quarto & VS Code ---
+*.Rproj
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.quarto/
+_freeze/
+.vscode/
+
+# --- venv ---
+.venv/
+
+# --- .env ---
+.env
+.env.*
+!.env.example
+
+# --- Saídas ---
+outputs/**
+!outputs/**/
+!outputs/render/.gitkeep
+/.quarto/
+**/*.quarto_ipynb
+
+# --- CLAUDE ---
 .claude/
 CLAUDE.md
+
