@@ -1,0 +1,147 @@
+---
+title: "Revisor do Portfólio com Gemini"
+subtitle: "Revisão do currículo e comparação com vagas"
+author:
+  - name: "Pedro Muniz Cherulli"
+date: today
+date-format: "DD/MM/YYYY"
+---
+
+```{r}
+#| include: false
+
+if (!requireNamespace("here", quietly = TRUE)) install.packages("here")
+
+if (!exists("params")) {
+  params <- list(
+    env_name = here::here(".venv")
+  )
+}
+
+env_name <- params$env_name
+proj <- here::here()
+
+python_path <- system(
+  "py -3.14 -c \"import sys; print(sys.executable)\"",
+  intern = TRUE
+)
+
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+```
+
+```{r}
+#| include: false
+
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+
+pacman::p_load(
+  reticulate,
+  knitr,
+  rmarkdown
+)
+
+if (!virtualenv_exists(env_name)) {
+  virtualenv_create(env_name, python = python_path)
+}
+
+use_virtualenv(env_name, required = TRUE)
+
+py_pkgs <- c(
+  "google-genai",
+  "python-dotenv"
+)
+
+installed_pkgs <- py_list_packages()$package
+missing_pkgs <- setdiff(py_pkgs, installed_pkgs)
+
+if (length(missing_pkgs) > 0) {
+  py_install(missing_pkgs, pip = TRUE)
+}
+
+reticulate::py_config()
+```
+
+```{python}
+#| include: false
+
+from pathlib import Path
+from datetime import date
+import os
+from dotenv import load_dotenv
+from google import genai
+
+PROJ = Path(r.proj)
+
+PASTA_JS = PROJ / "assets" / "js"
+PASTA_VAGAS = PROJ / "inputs" / "vagas"
+PASTA_REVISOR = PROJ / "inputs" / "revisor"
+MODELO = "gemini-3.1-flash-lite"
+HOJE = date.today().strftime("%d/%m/%Y")
+
+load_dotenv(PROJ / ".env")
+cliente = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+
+
+def perguntar_ao_gemini(instrucoes, texto):
+    resposta = cliente.interactions.create(
+        model=MODELO,
+        system_instruction=(PASTA_REVISOR / instrucoes).read_text(encoding="utf-8"),
+        input=f"Data do relatório: {HOJE}\n\n{texto}",
+    )
+    return resposta.output_text
+```
+
+---
+
+# Visão geral
+
+Este documento revisa o meu portfólio com o Gemini em duas etapas:
+
+1. **Revisão do currículo:** o conteúdo do site é analisado como um recrutador
+   faria na triagem, com pontos fortes, riscos e textos sugeridos para cada seção.
+   As instruções estão em `inputs/revisor/instrucoes_revisao.md`.
+2. **Comparação com vagas:** o currículo é comparado com as vagas da pasta `inputs/vagas/`,
+   com uma nota de aderência para cada uma e o que falta para melhorar as chances.
+   As instruções estão em `inputs/revisor/instrucoes_vagas.md`.
+
+O currículo vem dos arquivos de `assets/js/` que guardam as informações do site. O
+`main.js` fica de fora, porque só desenha a página. A chave da API vem da variável
+`GEMINI_API_KEY`, lida do arquivo `.env`, que não vai para o repositório.
+
+# Conteúdo lido
+
+```{python}
+#| echo: false
+
+arquivos = sorted(file for file in PASTA_JS.glob("*.js") if file.name != "main.js")
+curriculo = "\n\n".join(f"Arquivo {file.name}:\n{file.read_text(encoding='utf-8')}" for file in arquivos)
+
+vagas = sorted(PASTA_VAGAS.glob("*.md"))
+texto_vagas = "\n\n---\n\n".join(file.read_text(encoding="utf-8") for file in vagas)
+
+print("Currículo:", ", ".join(file.name for file in arquivos))
+print("Vagas:", ", ".join(file.name for file in vagas))
+```
+
+# Revisão do currículo
+
+```{python}
+#| echo: false
+#| output: asis
+
+print(perguntar_ao_gemini("instrucoes_revisao.md", f"# Currículo\n\n{curriculo}"))
+```
+
+# Comparação com vagas
+
+```{python}
+#| echo: false
+#| output: asis
+
+print(perguntar_ao_gemini("instrucoes_vagas.md", f"# Currículo\n\n{curriculo}\n\n# Vagas\n\n{texto_vagas}"))
+```
+
+---
+
+Gerado com o modelo `r py$MODELO`. São sugestões: confira cada uma antes de
+aplicar no site.
