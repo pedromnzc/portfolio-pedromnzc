@@ -1,0 +1,16 @@
+format:
+  html:
+    # O tema que vem primeiro é o padrão; o botão no topo troca para o claro.
+    theme:
+      dark: [darkly, tema-escuro.scss]
+      light: cosmo
+    title-block-banner: true
+    toc: true
+    toc-depth: 2
+    toc-title: "Sumário"
+    number-sections: true
+    embed-resources: true
+    smooth-scroll: true
+
+fontsize: 1.05rem
+linestretch: 1.5
