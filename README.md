@@ -3,6 +3,8 @@
 Estudante de Ciência de Dados no UniCEUB e estagiário na ANTT.
 Este repositório é o meu currículo online: uma página única, publicada com GitHub Pages,
 que reúne experiência, projetos, ferramentas, formação e contato.
+Ele também guarda um [revisor com IA](#revisor-com-gemini), que avalia esse currículo com o
+Google Gemini e o compara com vagas.
 
 **🔗 Site: https://pedromnzc.github.io/portfolio-pedromnzc/**
 
@@ -24,6 +26,14 @@ que reúne experiência, projetos, ferramentas, formação e contato.
   - [Formação](#formação)
   - [Idiomas](#idiomas)
   - [Contatos](#contatos)
+- [Revisor com Gemini](#revisor-com-gemini)
+  - [O que o relatório traz](#o-que-o-relatório-traz)
+  - [Como funciona](#como-funciona)
+  - [Como rodar](#como-rodar)
+  - [Como adicionar uma vaga](#como-adicionar-uma-vaga)
+  - [Como ajustar as respostas](#como-ajustar-as-respostas)
+  - [Segurança](#segurança)
+- [Como colaborar](#como-colaborar)
 - [Meus projetos](#meus-projetos)
 - [Contato](#contato)
 
@@ -227,6 +237,172 @@ já endereçada, e o primeiro e-mail da lista também aparece em destaque na se�
 | `icone` | *Opcional.* O nome do ícone no Simple Icons, só se for diferente do nome do contato. |
 
 > Se o ícone não for encontrado, o botão aparece só com o texto.
+
+---
+
+## Revisor com Gemini
+
+O revisor usa o Google Gemini para avaliar o meu currículo como um recrutador faria e para
+comparar o currículo com vagas. Ele lê as mesmas listas que alimentam o site e gera um
+relatório em HTML.
+
+O revisor roda no meu computador, quando eu quero uma avaliação. Ele não faz parte do site e
+não muda nada sozinho: o Gemini só sugere, e eu decido o que aplicar.
+
+### O que o relatório traz
+
+| Parte | O que mostra |
+|---|---|
+| **Revisão do currículo** | A primeira impressão de um recrutador, os pontos fortes, os riscos na triagem, sugestões por seção com o texto pronto para colar, palavras-chave e os próximos passos. |
+| **Comparação com vagas** | Uma nota de aderência de 0 a 100 para cada vaga, o que já atendo e o que falta em cada requisito, o que adicionar à experiência a curto e médio prazo, e em qual vaga tenho mais chances. |
+
+Exemplo do ranking de uma avaliação, com as três vagas fictícias que vêm no repositório:
+
+| Posição | Vaga | Aderência | Chance de ser chamado |
+|---|---|---|---|
+| 1 | Estágio em Ciência de Dados | 85 | Alta |
+| 2 | Engenharia de Software Júnior (Back-end) | 60 | Média |
+| 3 | Cozinheiro(a) de Linha | 0 | Baixa |
+
+A nota é calculada com pesos fixos: requisitos obrigatórios valem 60 pontos, diferenciais 20 e
+nível e contexto da vaga 20. Uma ferramenta que aparece só na lista, sem projeto que a use,
+conta como requisito parcial, não como atendido.
+
+### Como funciona
+
+```
+assets/js/*.js (menos o main.js) ─┐
+inputs/vagas/*.md ────────────────┼─▶ Gemini ─▶ outputs/render/inputs/revisor/revisor.html
+inputs/revisor/instrucoes_*.md ───┘
+```
+
+O `main.js` fica de fora porque só desenha a página; as informações do currículo estão nos
+outros arquivos de `assets/js/`. O Gemini é consultado duas vezes, uma para cada parte do
+relatório, com o modelo `gemini-3.1-flash-lite`, do plano gratuito.
+
+| Arquivo | Para que serve |
+|---|---|
+| `inputs/revisor/revisor.qmd` | Documento Quarto que lê os arquivos, consulta o Gemini e monta o relatório. |
+| `inputs/revisor/instrucoes_revisao.md` | O que o Gemini deve fazer na revisão do currículo. |
+| `inputs/revisor/instrucoes_vagas.md` | O que o Gemini deve fazer na comparação com vagas. |
+| `inputs/revisor/_metadata.yml` | O formato do relatório: HTML num arquivo só, com sumário e seções numeradas. |
+| `inputs/revisor/tema-escuro.scss` | As cores e fontes do site no relatório, que abre no tema escuro. |
+| `inputs/vagas/` | As vagas usadas na comparação, uma por arquivo. |
+| `_quarto.yml` | Diz ao Quarto para renderizar só o revisor e salvar o resultado em `outputs/render/`. |
+| `.env.example` | Modelo do arquivo onde fica a chave da API. |
+
+### Como rodar
+
+**Você vai precisar de:**
+
+- R 4.6 e o RStudio, que já traz o Quarto.
+- Python 3.14. No Windows, o documento procura o Python pelo comando `py -3.14`; se a sua
+  versão for outra, troque o número nessa linha do `revisor.qmd`.
+- Uma chave da API do Gemini, criada de graça em
+  [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+
+**Passo a passo:**
+
+1. Copie o arquivo `.env.example` para `.env`, na raiz do repositório, e preencha a chave:
+
+   ```
+   GEMINI_API_KEY=sua-chave
+   ```
+
+2. Na primeira vez, instale no R os pacotes que o Quarto usa para rodar o documento:
+
+   ```r
+   install.packages(c("knitr", "rmarkdown"))
+   ```
+
+3. Renderize o relatório. No RStudio, abra `inputs/revisor/revisor.qmd` e clique em
+   **Render**. Pelo terminal, na raiz do repositório:
+
+   ```bash
+   quarto render
+   ```
+
+   O Quarto que vem com o RStudio não fica disponível no terminal. Se o comando `quarto` não
+   for encontrado, use o botão do RStudio ou instale o Quarto em [quarto.org](https://quarto.org).
+
+4. Abra `outputs/render/inputs/revisor/revisor.html` no navegador.
+
+Na primeira vez o render demora mais, porque cria o ambiente Python (`.venv`) e instala os
+pacotes `google-genai` e `python-dotenv`. Depois disso, cada avaliação leva cerca de 40
+segundos. As respostas mudam um pouco a cada render, porque o Gemini não responde sempre
+igual.
+
+> Se aparecer o erro **503 (high demand)**, o modelo está sobrecarregado. Espere alguns minutos
+> e renderize de novo, ou troque o modelo (veja abaixo).
+
+### Como adicionar uma vaga
+
+Crie um arquivo `.md` em `inputs/vagas/`, com um nome que descreva a vaga (ex.:
+`analista-de-dados-empresa.md`), e cole o anúncio neste formato:
+
+```markdown
+# Título da vaga
+
+- **Empresa:** Nome da empresa
+- **Local:** Cidade, presencial, híbrido ou remoto
+
+## Atividades
+
+- O que a pessoa vai fazer.
+
+## Requisitos obrigatórios
+
+- O que a vaga exige.
+
+## Diferenciais
+
+- O que conta a favor, mas não é obrigatório.
+```
+
+A comparação lê todos os arquivos da pasta. Para tirar uma vaga da avaliação, apague o arquivo
+ou mova-o para fora de `inputs/vagas/`.
+
+### Como ajustar as respostas
+
+| O que mudar | Onde |
+|---|---|
+| O que o Gemini analisa e o formato da resposta | `inputs/revisor/instrucoes_revisao.md` e `inputs/revisor/instrucoes_vagas.md`, em português, sem mexer no código |
+| O modelo do Gemini | A linha `MODELO = "gemini-3.1-flash-lite"` no `revisor.qmd`. Os modelos gratuitos estão na [página de preços da API](https://ai.google.dev/gemini-api/docs/pricing). |
+| As cores e fontes do relatório | `inputs/revisor/tema-escuro.scss` |
+
+### Segurança
+
+- **A chave nunca vai para o repositório.** Ela fica só no `.env`, que o `.gitignore`
+  bloqueia. O site não tem chave nenhuma, porque o revisor não roda no navegador.
+- **Os relatórios ficam só no computador.** A pasta `outputs/` também é ignorada pelo git,
+  então a avaliação do meu currículo não é publicada.
+- **O Gemini só sugere.** Nenhuma mudança vai para o site sem eu revisar e fazer o commit.
+- **Texto de fora é tratado como dado.** As instruções mandam o Gemini ignorar qualquer
+  ordem escrita dentro do currículo ou de uma vaga colada, para que um anúncio mal-intencionado
+  não mude o comportamento do revisor.
+- **O que é enviado ao Gemini:** o conteúdo do currículo, que já é público no site, e as vagas
+  da pasta. Não coloque nas vagas dados pessoais de outras pessoas.
+
+---
+
+## Como colaborar
+
+Toda mudança segue o mesmo caminho, para que a `main` (que é o site publicado) só receba
+código revisado:
+
+1. **Issue:** descreve o que precisa ser feito e quando está pronto.
+2. **Branch:** criada a partir da `main`, com um prefixo que diz o tipo da mudança.
+3. **Commits:** pequenos, com a mensagem começando pelo mesmo prefixo
+   (ex.: `feat: adiciona .scss que cria tema escuro no .html`).
+4. **Pull request:** com `Closes #N` na descrição, para fechar a issue no merge.
+5. **Revisão e merge** na `main`.
+
+| Prefixo | Quando usar | Exemplo neste repositório |
+|---|---|---|
+| `feat/` | Funcionalidade nova | `feat/revisor-curriculo`, `feat/comparacao-vagas` |
+| `chore/` | Estrutura e configuração | `chore/estrutura-projeto` |
+| `style/` | Visual, sem mudar o funcionamento | `style/tema-relatorio` |
+| `docs/` | Documentação | `docs/revisor-gemini` |
 
 ---
 
